@@ -16,5 +16,5 @@ commands:
     description: To fill the n'th spot in the board
     usage: "usage: /put <boardNumber>"
   scoreboard:
-    description: To see the player's TicTacToe scoreboard
-    usage: /<command>
+    description: To see the player's TicTacToe scoreboard, or clear it
+    usage: "usage: /scoreboard OR /scoreboard clear"

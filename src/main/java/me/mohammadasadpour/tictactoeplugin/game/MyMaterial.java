@@ -1,8 +1,8 @@
 package me.mohammadasadpour.tictactoeplugin.game;
 
 import org.bukkit.Material;
-import static org.bukkit.Material.RED_WOOL;
-import static org.bukkit.Material.BLUE_WOOL;
+
+import static org.bukkit.Material.*;
 
 public enum MyMaterial {
     RED(RED_WOOL),
