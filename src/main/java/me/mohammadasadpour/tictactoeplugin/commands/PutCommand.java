@@ -95,6 +95,9 @@ public class PutCommand implements CommandExecutor {
         }
 
         game.getMyPlayer1().getPlayer().performCommand("scoreboard");
+        game.getMyPlayer1().getPlayer().performCommand("scoreboard");
+
+        game.getMyPlayer2().getPlayer().performCommand("scoreboard");
         game.getMyPlayer2().getPlayer().performCommand("scoreboard");
 
         game = null;

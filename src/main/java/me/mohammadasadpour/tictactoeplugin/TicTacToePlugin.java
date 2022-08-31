@@ -15,7 +15,7 @@ public final class TicTacToePlugin extends JavaPlugin {
         getCommand("scoreboard").setExecutor(new ScoreboardCommand());
         getServer().getPluginManager().registerEvents(new OnPutListener(), this);
         getServer().getPluginManager().registerEvents(new OnGameBoardBreakListener(), this);
-        // Scoreboard hide
+        //  30 Seconds wait for answer
         //  Database
     }
 }

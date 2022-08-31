@@ -1,57 +1,108 @@
 package me.mohammadasadpour.tictactoeplugin.commands;
 
+import me.mohammadasadpour.tictactoeplugin.TicTacToePlugin;
 import me.mohammadasadpour.tictactoeplugin.game.MyPlayer;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
+
 import static me.mohammadasadpour.tictactoeplugin.game.MyPlayer.addThePlayer;
 import static me.mohammadasadpour.tictactoeplugin.game.MyPlayer.myOnlinePlayers;
 
 
 public class ScoreboardCommand implements CommandExecutor {
     private MyPlayer myPlayer;
+    private boolean show = false;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (args.length == 0) {
-                addThePlayer(player);
+            if (!show) {
+                if (args.length == 0) {
+                    addThePlayer(player);
 
-                for(MyPlayer myPlayer : myOnlinePlayers)
-                    if (myPlayer.getPlayer().equals(player))
-                        this.myPlayer = myPlayer;
+                    for (MyPlayer myPlayer : myOnlinePlayers)
+                        if (myPlayer.getPlayer().equals(player))
+                            this.myPlayer = myPlayer;
 
-                ScoreboardManager manager = Bukkit.getScoreboardManager();
-                assert manager != null;
-                Scoreboard scoreboard = manager.getNewScoreboard();
+                    ScoreboardManager manager = Bukkit.getScoreboardManager();
+                    Scoreboard scoreboard = manager.getNewScoreboard();
 
-                Objective objective = scoreboard.registerNewObjective("TicTacToe","dummy","TicTacToe");
-                objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+                    Objective objective = scoreboard.registerNewObjective("TicTacToeScoreboard", "dummy",
+                            ChatColor.translateAlternateColorCodes('&', "&1&l << &f&lTicTacToe &1&l>>"));
+                    objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-                Score gamesWonScore = objective.getScore("Games Won = " + myPlayer.getGamesWon());
-                Score gamesLostScore = objective.getScore("Games Lost = " + myPlayer.getGamesLost());
-                Score gamesTiedScore = objective.getScore("Games Tied = " + myPlayer.getGamesTied());
+                    Score score = objective.getScore(ChatColor.BLUE + "=-=-=-=-=-=-=-=");
+                    Score gamesWonScore = objective.getScore(ChatColor.AQUA + "GAMES WON  ->  " + ChatColor.WHITE + myPlayer.getGamesWon());
+                    Score gamesLostScore = objective.getScore(ChatColor.AQUA + "GAMES LOST ->  " + ChatColor.WHITE + myPlayer.getGamesLost());
+                    Score gamesTiedScore = objective.getScore(ChatColor.AQUA + "GAMES TIED ->  " + ChatColor.WHITE + myPlayer.getGamesTied());
 
-                gamesWonScore.setScore(3);
-                gamesLostScore.setScore(2);
-                gamesTiedScore.setScore(1);
+                    score.setScore(3);
+                    gamesWonScore.setScore(2);
+                    gamesLostScore.setScore(1);
+                    gamesTiedScore.setScore(0);
 
-                player.setScoreboard(scoreboard);
-            } else if (args.length == 1 && args[0].equals("clear")) {
-                myPlayer.clearGamesWon();
-                myPlayer.clearGamesLost();
-                myPlayer.clearGamesTied();
-                myPlayer.getPlayer().performCommand("scoreboard");
+                    player.setScoreboard(scoreboard);
+                    scoreboardTitleAnimation();
+                    show = true;
+                } else if (args.length == 1 && args[0].equals("clear")) {
+                    myPlayer.clearGamesWon();
+                    myPlayer.clearGamesLost();
+                    myPlayer.clearGamesTied();
+                    myPlayer.getPlayer().performCommand("scoreboard");
+                } else {
+                    player.sendMessage("Please use the 'Tic-Tac-Toe scoreboard' command correctly.");
+                    return false;
+                }
             } else {
-                player.sendMessage("Please use the 'Tic-Tac-Toe scoreboard' command correctly.");
-                return false;
+                player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+                show = false;
             }
         } else {
             sender.sendMessage("Only a player can summon the scoreboard.");
         }
         return true;
+    }
+
+    public void scoreboardTitleAnimation() {
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(TicTacToePlugin.getProvidingPlugin(ScoreboardCommand.class), new Runnable() {
+
+            int count = 0;
+
+            @Override
+            public void run() {
+
+                if (count == 10)
+                    count = 0;
+
+                switch (count) {
+                    case 0 -> myPlayer.getPlayer().getScoreboard().getObjective(DisplaySlot.SIDEBAR).setDisplayName(
+                            ChatColor.translateAlternateColorCodes('&', "&1&l << &f&lTicTacToe &1&l>>"));
+                    case 1 -> myPlayer.getPlayer().getScoreboard().getObjective(DisplaySlot.SIDEBAR).setDisplayName(
+                            ChatColor.translateAlternateColorCodes('&', "&1&l << &c&lT&f&licTacToe &1&l>>"));
+                    case 2 -> myPlayer.getPlayer().getScoreboard().getObjective(DisplaySlot.SIDEBAR).setDisplayName(
+                            ChatColor.translateAlternateColorCodes('&', "&1&l << &f&lT&c&li&f&lcTacToe &1&l>>"));
+                    case 3 -> myPlayer.getPlayer().getScoreboard().getObjective(DisplaySlot.SIDEBAR).setDisplayName(
+                            ChatColor.translateAlternateColorCodes('&', "&1&l << &f&lTi&c&lc&f&lTacToe &1&l>>"));
+                    case 4 -> myPlayer.getPlayer().getScoreboard().getObjective(DisplaySlot.SIDEBAR).setDisplayName(
+                            ChatColor.translateAlternateColorCodes('&', "&1&l << &f&lTic&c&lT&f&lacToe &1&l>>"));
+                    case 5 -> myPlayer.getPlayer().getScoreboard().getObjective(DisplaySlot.SIDEBAR).setDisplayName(
+                            ChatColor.translateAlternateColorCodes('&', "&1&l << &f&lTicT&c&la&f&lcToe &1&l>>"));
+                    case 6 -> myPlayer.getPlayer().getScoreboard().getObjective(DisplaySlot.SIDEBAR).setDisplayName(
+                            ChatColor.translateAlternateColorCodes('&', "&1&l << &f&lTicTa&c&lc&f&lToe &1&l>>"));
+                    case 7 -> myPlayer.getPlayer().getScoreboard().getObjective(DisplaySlot.SIDEBAR).setDisplayName(
+                            ChatColor.translateAlternateColorCodes('&', "&1&l << &f&lTicTac&c&lT&f&loe &1&l>>"));
+                    case 8 -> myPlayer.getPlayer().getScoreboard().getObjective(DisplaySlot.SIDEBAR).setDisplayName(
+                            ChatColor.translateAlternateColorCodes('&', "&1&l << &f&lTicTacT&c&lo&f&le &1&l>>"));
+                    case 9 -> myPlayer.getPlayer().getScoreboard().getObjective(DisplaySlot.SIDEBAR).setDisplayName(
+                            ChatColor.translateAlternateColorCodes('&', "&1&l << &f&lTicTacTo&c&le &1&l>>"));
+                }
+                count++;
+            }
+        }, 0, 5);
     }
 }
