@@ -1,5 +1,6 @@
 package me.mohammadasadpour.tictactoeplugin.commands;
 
+import me.mohammadasadpour.tictactoeplugin.game.Game;
 import me.mohammadasadpour.tictactoeplugin.game.MyPlayer;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.ChatColor;
@@ -16,13 +17,12 @@ import org.bukkit.inventory.meta.FireworkMeta;
 
 import java.util.Random;
 
-import static me.mohammadasadpour.tictactoeplugin.game.Game.game;
 import static me.mohammadasadpour.tictactoeplugin.game.MyPlayer.addThePlayer;
 import static me.mohammadasadpour.tictactoeplugin.game.MyPlayer.myOnlinePlayers;
 
 public class PutCommand implements CommandExecutor {
     private MyPlayer myPlayer;
-
+    private Game game;
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
@@ -31,14 +31,12 @@ public class PutCommand implements CommandExecutor {
             for(MyPlayer myPlayer : myOnlinePlayers)
                 if (myPlayer.getPlayer().equals(player))
                     this.myPlayer = myPlayer;
+            game = myPlayer.getGame();
 
             if (game == null) {
                 myPlayer.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "No Tic-Tac-Toe game has begun yet!");
                 return true;
-            } else if (game.isOver()) {
-                myPlayer.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Game has ended!");
-                return true;
-            } else if (!myPlayer.equals(game.getTurn())) {
+            }else if (!myPlayer.equals(game.getTurn())) {
                 myPlayer.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "It's not your turn!");
                 return true;
             } else if (args.length != 1) {
@@ -67,8 +65,8 @@ public class PutCommand implements CommandExecutor {
 
     private void announceEnd() {
         if (game.getWinner().equals("TIE")) {
-            game.getMyPlayer1().getPlayer().sendTitle("GAME TIED!","GAME TIED!",2,70,2);
-            game.getMyPlayer2().getPlayer().sendTitle("GAME TIED!","GAME TIED!",2,70,2);
+            game.getMyPlayer1().getPlayer().sendTitle("GAME TIED!","huh...",2,70,2);
+            game.getMyPlayer2().getPlayer().sendTitle("GAME TIED!","huh...",2,70,2);
             game.getMyPlayer1().getPlayer().sendMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "The game ended with a tie.");
             game.getMyPlayer1().anotherGameTied();
             game.getMyPlayer2().getPlayer().sendMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "The game ended with a tie.");
@@ -94,13 +92,21 @@ public class PutCommand implements CommandExecutor {
             }
         }
 
-        game.getMyPlayer1().getPlayer().performCommand("scoreboard");
-        game.getMyPlayer1().getPlayer().performCommand("scoreboard");
+        if (!game.getMyPlayer1().isScoreboard()) {
+            game.getMyPlayer1().getPlayer().performCommand("scoreboard");
+        } else {
+            game.getMyPlayer1().getPlayer().performCommand("scoreboard");
+            game.getMyPlayer1().getPlayer().performCommand("scoreboard");
+        }
 
-        game.getMyPlayer2().getPlayer().performCommand("scoreboard");
-        game.getMyPlayer2().getPlayer().performCommand("scoreboard");
+        if (!game.getMyPlayer2().isScoreboard()) {
+            game.getMyPlayer2().getPlayer().performCommand("scoreboard");
+        } else {
+            game.getMyPlayer2().getPlayer().performCommand("scoreboard");
+            game.getMyPlayer2().getPlayer().performCommand("scoreboard");
+        }
 
-        game = null;
+        game.setPlayerGamesNull();
     }
 
     private void fireworks() {

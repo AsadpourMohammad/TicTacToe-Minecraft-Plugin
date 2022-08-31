@@ -17,4 +17,4 @@ commands:
     usage: "usage: /put <boardNumber>"
   scoreboard:
     description: To see the player's TicTacToe scoreboard, or clear it
-    usage: "usage: /scoreboard OR /scoreboard clear"
+    usage: /<command>

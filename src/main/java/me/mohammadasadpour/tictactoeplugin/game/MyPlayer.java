@@ -9,8 +9,10 @@ import java.util.ArrayList;
 public class MyPlayer implements Serializable {
     public static ArrayList<MyPlayer> myOnlinePlayers = new ArrayList<>();
 
+    private Game game;
     private final Player player;
     private MyMaterial material;
+    private boolean scoreboard = false;
 
     private int gamesWon = 0;
     private int gamesLost = 0;
@@ -18,6 +20,14 @@ public class MyPlayer implements Serializable {
 
     public MyPlayer(Player player) {
         this.player = player;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
+    public Game getGame() {
+        return game;
     }
 
     public Player getPlayer() {
@@ -30,6 +40,14 @@ public class MyPlayer implements Serializable {
 
     public void setMaterial(MyMaterial material) {
         this.material = material;
+    }
+
+    public boolean isScoreboard() {
+        return scoreboard;
+    }
+
+    public void setScoreboard(boolean scoreboard) {
+        this.scoreboard = scoreboard;
     }
 
     public int getGamesWon() {

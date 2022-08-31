@@ -16,18 +16,17 @@ import static me.mohammadasadpour.tictactoeplugin.game.MyPlayer.myOnlinePlayers;
 
 public class ScoreboardCommand implements CommandExecutor {
     private MyPlayer myPlayer;
-    private boolean show = false;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (!show) {
-                if (args.length == 0) {
-                    addThePlayer(player);
+            addThePlayer(player);
 
-                    for (MyPlayer myPlayer : myOnlinePlayers)
-                        if (myPlayer.getPlayer().equals(player))
-                            this.myPlayer = myPlayer;
+            for(MyPlayer myPlayer : myOnlinePlayers)
+                if (myPlayer.getPlayer().equals(player))
+                    this.myPlayer = myPlayer;
+            if (!myPlayer.isScoreboard()) {
+                if (args.length == 0) {
 
                     ScoreboardManager manager = Bukkit.getScoreboardManager();
                     Scoreboard scoreboard = manager.getNewScoreboard();
@@ -47,20 +46,14 @@ public class ScoreboardCommand implements CommandExecutor {
                     gamesTiedScore.setScore(0);
 
                     player.setScoreboard(scoreboard);
-                    scoreboardTitleAnimation();
-                    show = true;
-                } else if (args.length == 1 && args[0].equals("clear")) {
-                    myPlayer.clearGamesWon();
-                    myPlayer.clearGamesLost();
-                    myPlayer.clearGamesTied();
-                    myPlayer.getPlayer().performCommand("scoreboard");
+                    myPlayer.setScoreboard(true);
                 } else {
                     player.sendMessage("Please use the 'Tic-Tac-Toe scoreboard' command correctly.");
                     return false;
                 }
             } else {
                 player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-                show = false;
+                myPlayer.setScoreboard(false);
             }
         } else {
             sender.sendMessage("Only a player can summon the scoreboard.");

@@ -7,13 +7,11 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.Locale;
-import static me.mohammadasadpour.tictactoeplugin.game.Game.game;
+
 import static me.mohammadasadpour.tictactoeplugin.game.MyPlayer.addThePlayer;
 import static me.mohammadasadpour.tictactoeplugin.game.MyPlayer.myOnlinePlayers;
 
@@ -33,17 +31,14 @@ public class ChallengeCommand implements CommandExecutor {
             if (args.length != 1) {
                 myPlayer1.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Please use the 'Tic-Tac-Toe challenge' command correctly!");
                 return false;
-            } else if (game != null && (game.getMyPlayer1().equals(myPlayer1) || game.getMyPlayer2().equals(myPlayer1)) ) {
+            } else if (myPlayer1.getGame() != null) {
                 myPlayer1.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You cannot start a Tic-Tac-Toe game while playing one!");
-                return true;
-            } else if (game != null) {
-                myPlayer1.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "A Tic-Tac-Toe game is currently being played in the server.");
                 return true;
             } else if (myPlayer1.getPlayer().getDisplayName().toLowerCase(Locale.ROOT).equals(args[0].toLowerCase(Locale.ROOT))) {
                 myPlayer1.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You cannot challenge yourself to a game of Tic-Tac-Toe!");
                 return false;
             } else if (!isAboveGround()) {
-                myPlayer1.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Please try again in a place with open air!");
+                myPlayer1.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Please chose some place else!");
                 return true;
             } else {
                 Player player2 = Bukkit.getServer().getPlayerExact(args[0]);
@@ -71,7 +66,7 @@ public class ChallengeCommand implements CommandExecutor {
     public boolean isAboveGround() {
         ArrayList<Location> surroundingArea = new ArrayList<>();
         for (int x = -3 ; x < 4; x++)
-            for (int y = 20; y < 24; y++)
+            for (int y = 2; y < 6; y++)
                 for (int z = -5; z < 2; z++)
                     surroundingArea.add(new Location(myPlayer1.getPlayer().getWorld(),
                             myPlayer1.getPlayer().getLocation().getBlockX() + x,

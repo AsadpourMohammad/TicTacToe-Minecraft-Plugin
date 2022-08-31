@@ -11,7 +11,8 @@ import java.io.Serializable;
 import java.util.*;
 
 public class Game implements Serializable {
-    public static Game game = null;
+    public static HashMap<String, Game> games = new HashMap<>();
+    public static ArrayList<Location> allLocations = new ArrayList<>();
 
     private final MyPlayer myPlayer1;
     private final MyPlayer myPlayer2;
@@ -32,8 +33,10 @@ public class Game implements Serializable {
     public Game(MyPlayer myPlayer1, MyPlayer myPlayer2) {
         this.myPlayer1 = myPlayer1;
         this.myPlayer1.setMaterial(MyMaterial.RED);
+        this.myPlayer1.setGame(this);
         this.myPlayer2 = myPlayer2;
         this.myPlayer2.setMaterial(MyMaterial.BLUE);
+        this.myPlayer2.setGame(this);
         this.turn = this.myPlayer1;
         this.gameName =
                 StringUtils.capitalize(myPlayer1.getPlayer().getDisplayName()) +
@@ -43,7 +46,7 @@ public class Game implements Serializable {
         this.board = new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9"};
         this.createBoard();
 
-        game = this;
+        games.put(gameName, this);
     }
 
     public void createBoard() {
@@ -52,14 +55,14 @@ public class Game implements Serializable {
             for (int z = -5; z < 2; z++)
                 groundBlock.add(new Location(myPlayer1.getPlayer().getWorld(),
                         myPlayer1.getPlayer().getLocation().getBlockX() + x,
-                        myPlayer1.getPlayer().getLocation().getBlockY() + 20,
+                        myPlayer1.getPlayer().getLocation().getBlockY() + 2,
                         myPlayer1.getPlayer().getLocation().getBlockZ() + z));
 
         for (Location location : groundBlock)
             location.getBlock().setType(Material.LIGHT_BLUE_GLAZED_TERRACOTTA);
 
         blockBoard = new ArrayList<>();
-        for (int y = 23; y > 20; y--)
+        for (int y = 5; y > 2; y--)
             for (int x = -1; x < 2; x++)
                 blockBoard.add(new Location(myPlayer1.getPlayer().getWorld(),
                         myPlayer1.getPlayer().getLocation().getBlockX() + x,
@@ -69,9 +72,12 @@ public class Game implements Serializable {
         for (Location location : blockBoard)
             location.getBlock().setType(org.bukkit.Material.WHITE_WOOL);
 
+        allLocations.addAll(groundBlock);
+        allLocations.addAll(blockBoard);
+
         blockBoardHologram();
 
-        myPlayer1.getPlayer().teleport(myPlayer1.getPlayer().getLocation().add(1,21,-1));
+        myPlayer1.getPlayer().teleport(myPlayer1.getPlayer().getLocation().add(1,3,-1));
         myPlayer1.getPlayer().sendMessage(myPlayer2.getPlayer().getDisplayName() + " has been teleported to your location.");
 
         myPlayer2.getPlayer().teleport(myPlayer1.getPlayer().getLocation().add(-2,0,0));
@@ -85,15 +91,23 @@ public class Game implements Serializable {
         for (Location location : groundBlock)
             location.getBlock().breakNaturally();
 
-        myPlayer1.getPlayer().teleport(myPlayer1.getPlayer().getLocation().add(0,-20,0));
-        myPlayer2.getPlayer().teleport(myPlayer2.getPlayer().getLocation().add(0,-20,0));
+        allLocations.removeAll(groundBlock);
+        allLocations.removeAll(blockBoard);
+
+        myPlayer1.getPlayer().teleport(myPlayer1.getPlayer().getLocation().add(0,-2,0));
+        myPlayer2.getPlayer().teleport(myPlayer2.getPlayer().getLocation().add(0,-2,0));
+    }
+
+    public void setPlayerGamesNull() {
+        myPlayer1.setGame(null);
+        myPlayer2.setGame(null);
     }
 
     public boolean put(int n) {
         if (Arrays.asList(board).contains(String.valueOf(n))) {
             if (!isOver()) {
                 this.board[n - 1] = turn.getMaterial().name();
-                blockBoard.get(n - 1).getBlock().setType(game.getTurn().getMaterial());
+                blockBoard.get(n - 1).getBlock().setType(turn.getMaterial());
             }
 
             if (hasContestantWon()) {
@@ -132,6 +146,10 @@ public class Game implements Serializable {
         return over;
     }
 
+    public String getGameName() {
+        return gameName;
+    }
+
     public MyPlayer getMyPlayer1() {
         return myPlayer1;
     }
@@ -166,7 +184,7 @@ public class Game implements Serializable {
         ticTacToeHologram.setGravity(false);
         ticTacToeHologram.setVisible(false);
         ticTacToeHologram.setCustomNameVisible(true);
-        ticTacToeHologram.setCustomName(ChatColor.RED + "TicTacToe");
+        ticTacToeHologram.setCustomName(ChatColor.RED + "" + ChatColor.BOLD + "TicTacToe");
 
         ArmorStand playersHologram = (ArmorStand) myPlayer1.getPlayer().getWorld().spawnEntity(blockBoard.get(2).getBlock().getLocation().add(-0.5,0,0), EntityType.ARMOR_STAND);
         playersHologram.setGravity(false);
