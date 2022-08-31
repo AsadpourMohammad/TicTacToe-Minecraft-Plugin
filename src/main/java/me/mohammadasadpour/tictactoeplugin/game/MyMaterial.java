@@ -2,24 +2,21 @@ package me.mohammadasadpour.tictactoeplugin.game;
 
 import org.bukkit.Material;
 
+import java.io.Serializable;
+
 import static org.bukkit.Material.*;
 
-public enum MyMaterial {
+public enum MyMaterial implements Serializable {
     RED(RED_WOOL),
     BLUE(BLUE_WOOL);
 
-    private final Material material;
+    private final String materialName;
 
     MyMaterial(Material material) {
-        this.material = material;
+        this.materialName = material.name();
     }
 
     public Material getMaterial() {
-        return material;
-    }
-
-    @Override
-    public String toString() {
-        return material.toString();
+        return Material.valueOf(materialName);
     }
 }

@@ -7,14 +7,20 @@ commands:
     description: To challenge another player to a game of Tic-Tac-Toe
     usage: "usage: /challenge <anotherPlayerName>"
   accept:
-    description: To accept another player's Tic-Tac-Toe challenge
+    description: To accept another player's Tic-Tac-Toe Challenge
     usage: /<command>
   deny:
-    description: To deny another player's Tic-Tac-Toe challenge
+    description: To deny another player's Tic-Tac-Toe Challenge
     usage: /<command>
   put:
-    description: To fill the n'th spot in the board
+    description: To fill the n'th spot in the Board
     usage: "usage: /put <boardNumber>"
+  save:
+    description: To save the player's Tic-Tac-Toe game for later
+    usage: /<command>
+  load:
+    description: To continue an old Tic-Tac-Toe game
+    usage: "usage: /load <gameName>"
   scoreboard:
-    description: To see the player's TicTacToe scoreboard, or clear it
+    description: To see the player's TicTacToe Scoreboard, or to hide it
     usage: /<command>

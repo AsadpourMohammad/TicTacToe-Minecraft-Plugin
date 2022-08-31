@@ -3,7 +3,6 @@ package me.mohammadasadpour.tictactoeplugin.commands;
 import me.mohammadasadpour.tictactoeplugin.game.Game;
 import me.mohammadasadpour.tictactoeplugin.game.MyPlayer;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.FireworkEffect.Builder;
@@ -17,8 +16,9 @@ import org.bukkit.inventory.meta.FireworkMeta;
 
 import java.util.Random;
 
-import static me.mohammadasadpour.tictactoeplugin.game.MyPlayer.addThePlayer;
+import static me.mohammadasadpour.tictactoeplugin.commands.SaveCommand.writeGame;
 import static me.mohammadasadpour.tictactoeplugin.game.MyPlayer.myOnlinePlayers;
+import static me.mohammadasadpour.tictactoeplugin.utils.RepeatingChatColors.*;
 
 public class PutCommand implements CommandExecutor {
     private MyPlayer myPlayer;
@@ -26,93 +26,88 @@ public class PutCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            addThePlayer(player);
+            MyPlayer.addMyPlayer(player);
 
             for(MyPlayer myPlayer : myOnlinePlayers)
-                if (myPlayer.getPlayer().equals(player))
+                if (myPlayer.get().equals(player))
                     this.myPlayer = myPlayer;
+
             game = myPlayer.getGame();
 
-            if (game == null) {
-                myPlayer.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "No Tic-Tac-Toe game has begun yet!");
-                return true;
+            if (args.length != 1) {
+                player.sendMessage(Color_R + "Please use the 'Tic-Tac-Toe Put' command correctly!");
+                return false;
+            } else if (game == null) {
+                player.sendMessage(Color_R + "No Tic-Tac-Toe game has begun yet!");
             }else if (!myPlayer.equals(game.getTurn())) {
-                myPlayer.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "It's not your turn!");
-                return true;
-            } else if (args.length != 1) {
-                myPlayer.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Please use the 'Tic-Tac-Toe put' command correctly!");
-                return false;
+                player.sendMessage(Color_R + "It's not your turn!");
             } else if (!NumberUtils.isCreatable(args[0])) {
-                myPlayer.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Please enter a valid number!");
-                return false;
+                player.sendMessage(Color_R + "Please enter a valid number!");
             } else {
                 if (game.put(Integer.parseInt(args[0]))) {
-                    if (game.isOver()) {
+                    if (game.isOver())
                         announceEnd();
-                    } else {
-                        game.getTurn().getPlayer().sendMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "Your turn to fill a spot.");
-                    }
+                    else
+                        game.getTurn().get().sendMessage(Color_B + "Your turn to fill a spot.");
                 } else {
-                    myPlayer.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Please choose a different spot.");
+                    player.sendMessage(Color_R + "Please choose a different spot.");
                 }
-                return true;
             }
         } else {
-            sender.sendMessage("Only a player can call the 'Tic-Tac-Toe put' command.");
-            return true;
+            sender.sendMessage("Only a player can call the 'Tic-Tac-Toe Put' command.");
         }
+        return true;
     }
 
     private void announceEnd() {
-        if (game.getWinner().equals("TIE")) {
-            game.getMyPlayer1().getPlayer().sendTitle("GAME TIED!","huh...",2,70,2);
-            game.getMyPlayer2().getPlayer().sendTitle("GAME TIED!","huh...",2,70,2);
-            game.getMyPlayer1().getPlayer().sendMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "The game ended with a tie.");
+        Player player1 = game.getMyPlayer1().get();
+        Player player2 = game.getMyPlayer2().get();
+
+        if (game.getTurn() == null) {
+            player1.sendTitle("GAME TIED!","huh...",2,70,2);
+            player2.sendTitle("GAME TIED!","huh...",2,70,2);
+
+            player1.sendMessage(Color_A + "The game ended with a tie.");
+            player2.sendMessage(Color_A + "The game ended with a tie.");
+
             game.getMyPlayer1().anotherGameTied();
-            game.getMyPlayer2().getPlayer().sendMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "The game ended with a tie.");
             game.getMyPlayer2().anotherGameTied();
         } else {
-            game.getTurn().getPlayer().sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "You have won the game!");
-            game.getTurn().getPlayer().sendTitle("YOU WON!","YAY!",2,70,2);
+            Player winner = game.getTurn().get();
+            Player loser = winner.equals(player1) ? player2 : player1;
 
-            for (int i = 0; i < 13; i++)
-                fireworks();
+            winner.sendMessage(Color_A + "You Have Won The Game!");
+            winner.sendTitle("YOU WON!","YAY!",2,70,2);
 
-            if (game.getTurn().equals(game.getMyPlayer1())) {
-                game.getMyPlayer2().getPlayer().sendTitle("YOU LOST!","SORRY...",2,70,2);
+            loser.sendTitle("YOU LOST!","SORRY...",2,70,2);
+            loser.sendMessage(Color_DR + "You Lost The Game To " + winner.getDisplayName() + "!");
 
-                game.getMyPlayer2().getPlayer().sendMessage(ChatColor.DARK_RED + "" + ChatColor.BOLD + "You lost the game to " + game.getMyPlayer1().getPlayer().getDisplayName() + "!");
+            if (game.getMyPlayer1().get().equals(winner)) {
                 game.getMyPlayer1().anotherGameWon();
                 game.getMyPlayer2().anotherGameLost();
-            } else if (game.getTurn().equals(game.getMyPlayer2())) {
-                game.getMyPlayer1().getPlayer().sendTitle("YOU LOST!","SORRY...",2,70,2);
-                game.getMyPlayer1().getPlayer().sendMessage(ChatColor.DARK_RED + "" + ChatColor.BOLD + "You lost the game to " + game.getMyPlayer2().getPlayer().getDisplayName() + "!");
+            } else {
                 game.getMyPlayer1().anotherGameLost();
                 game.getMyPlayer2().anotherGameWon();
             }
+
+            for (int i = 0; i < 13; i++)
+                fireworks();
         }
 
-        if (!game.getMyPlayer1().isScoreboardShown()) {
-            game.getMyPlayer1().getPlayer().performCommand("scoreboard");
-        } else {
-            game.getMyPlayer1().getPlayer().performCommand("scoreboard");
-            game.getMyPlayer1().getPlayer().performCommand("scoreboard");
-        }
+        game.getMyPlayer1().showScoreboard(false);
+        game.getMyPlayer1().get().performCommand("scoreboard");
 
-        if (!game.getMyPlayer2().isScoreboardShown()) {
-            game.getMyPlayer2().getPlayer().performCommand("scoreboard");
-        } else {
-            game.getMyPlayer2().getPlayer().performCommand("scoreboard");
-            game.getMyPlayer2().getPlayer().performCommand("scoreboard");
-        }
+        game.getMyPlayer2().showScoreboard(false);
+        game.getMyPlayer2().get().performCommand("scoreboard");
 
-        game.setPlayerGamesNull();
+        writeGame(game);
+        game.endGame();
     }
 
     private void fireworks() {
         Random random = new Random();
 
-        Firework firework = game.getTurn().getPlayer().getWorld().spawn(game.getTurn().getPlayer().getLocation(), Firework.class);
+        Firework firework = game.getTurn().get().getWorld().spawn(game.getTurn().get().getLocation(), Firework.class);
         FireworkMeta meta = firework.getFireworkMeta();
         Builder builder = FireworkEffect.builder();
         Type[] type = Type.values();
