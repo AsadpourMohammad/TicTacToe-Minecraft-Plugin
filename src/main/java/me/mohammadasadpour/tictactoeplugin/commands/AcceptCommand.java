@@ -2,13 +2,11 @@ package me.mohammadasadpour.tictactoeplugin.commands;
 
 import me.mohammadasadpour.tictactoeplugin.game.Game;
 import me.mohammadasadpour.tictactoeplugin.game.MyPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import static me.mohammadasadpour.tictactoeplugin.commands.ChallengeCommand.myPlayer1;
 import static me.mohammadasadpour.tictactoeplugin.commands.ChallengeCommand.myPlayer2;
 import static me.mohammadasadpour.tictactoeplugin.game.MyPlayer.addThePlayer;
@@ -43,7 +41,7 @@ public class AcceptCommand implements CommandExecutor {
                 myPlayer.getPlayer().sendMessage(ChatColor.RED + "You have not been challenged yet!");
             }
         } else {
-            sender.sendMessage("Only a player can accept a challenge.");
+            sender.sendMessage("Only a player can accept a Tic-Tac-Toe challenge.");
         }
         return true;
     }

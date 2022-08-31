@@ -35,7 +35,7 @@ public class DenyCommand implements CommandExecutor {
                 myPlayer.getPlayer().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You have not been challenged yet!");
             }
         } else {
-            sender.sendMessage("Only a player can deny a challenge.");
+            sender.sendMessage("Only a player can deny a Tic-Tac-Toe challenge.");
         }
         return true;
     }

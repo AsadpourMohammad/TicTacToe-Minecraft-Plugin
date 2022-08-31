@@ -40,8 +40,8 @@ public class Game implements Serializable {
         this.turn = this.myPlayer1;
         this.gameName =
                 StringUtils.capitalize(myPlayer1.getPlayer().getDisplayName()) +
-                StringUtils.capitalize(myPlayer2.getPlayer().getDisplayName()) +
-                hashCode();
+                        StringUtils.capitalize(myPlayer2.getPlayer().getDisplayName()) +
+                        hashCode();
 
         this.board = new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9"};
         this.createBoard();
@@ -77,10 +77,10 @@ public class Game implements Serializable {
 
         blockBoardHologram();
 
-        myPlayer1.getPlayer().teleport(myPlayer1.getPlayer().getLocation().add(1,3,-1));
+        myPlayer1.getPlayer().teleport(myPlayer1.getPlayer().getLocation().add(1, 3, -1));
         myPlayer1.getPlayer().sendMessage(myPlayer2.getPlayer().getDisplayName() + " has been teleported to your location.");
 
-        myPlayer2.getPlayer().teleport(myPlayer1.getPlayer().getLocation().add(-2,0,0));
+        myPlayer2.getPlayer().teleport(myPlayer1.getPlayer().getLocation().add(-2, 0, 0));
         myPlayer2.getPlayer().sendMessage("You have been teleported to " + myPlayer1.getPlayer().getDisplayName() + "'s location.");
     }
 
@@ -94,8 +94,8 @@ public class Game implements Serializable {
         allLocations.removeAll(groundBlock);
         allLocations.removeAll(blockBoard);
 
-        myPlayer1.getPlayer().teleport(myPlayer1.getPlayer().getLocation().add(0,-2,0));
-        myPlayer2.getPlayer().teleport(myPlayer2.getPlayer().getLocation().add(0,-2,0));
+        myPlayer1.getPlayer().teleport(myPlayer1.getPlayer().getLocation().add(0, -2, 0));
+        myPlayer2.getPlayer().teleport(myPlayer2.getPlayer().getLocation().add(0, -2, 0));
     }
 
     public void setPlayerGamesNull() {
@@ -173,20 +173,15 @@ public class Game implements Serializable {
     public String getWinner() {
         return winner;
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(myPlayer1, myPlayer2);
-    }
-
+    
     public void blockBoardHologram() {
-        ArmorStand ticTacToeHologram = (ArmorStand) myPlayer1.getPlayer().getWorld().spawnEntity(blockBoard.get(2).getBlock().getLocation().add(-0.5,0.3,0), EntityType.ARMOR_STAND);
+        ArmorStand ticTacToeHologram = (ArmorStand) myPlayer1.getPlayer().getWorld().spawnEntity(blockBoard.get(2).getBlock().getLocation().add(-0.5, 0.3, 0), EntityType.ARMOR_STAND);
         ticTacToeHologram.setGravity(false);
         ticTacToeHologram.setVisible(false);
         ticTacToeHologram.setCustomNameVisible(true);
         ticTacToeHologram.setCustomName(ChatColor.RED + "" + ChatColor.BOLD + "TicTacToe");
 
-        ArmorStand playersHologram = (ArmorStand) myPlayer1.getPlayer().getWorld().spawnEntity(blockBoard.get(2).getBlock().getLocation().add(-0.5,0,0), EntityType.ARMOR_STAND);
+        ArmorStand playersHologram = (ArmorStand) myPlayer1.getPlayer().getWorld().spawnEntity(blockBoard.get(2).getBlock().getLocation().add(-0.5, 0, 0), EntityType.ARMOR_STAND);
         playersHologram.setGravity(false);
         playersHologram.setVisible(false);
         playersHologram.setCustomNameVisible(true);
@@ -194,7 +189,7 @@ public class Game implements Serializable {
     }
 
     public void winnerHologram() {
-        ArmorStand winnerHologram = (ArmorStand) myPlayer1.getPlayer().getWorld().spawnEntity(blockBoard.get(2).getBlock().getLocation().add(-0.5,-0.3,0), EntityType.ARMOR_STAND);
+        ArmorStand winnerHologram = (ArmorStand) myPlayer1.getPlayer().getWorld().spawnEntity(blockBoard.get(2).getBlock().getLocation().add(-0.5, -0.3, 0), EntityType.ARMOR_STAND);
         winnerHologram.setVisible(false);
         winnerHologram.setCustomNameVisible(true);
         if (winner.equals("TIE"))
@@ -202,5 +197,10 @@ public class Game implements Serializable {
         else
             winnerHologram.setCustomName(ChatColor.BOLD + "WINNER = " + winner.toUpperCase(Locale.ROOT));
         winnerHologram.setGravity(false);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(myPlayer1, myPlayer2);
     }
 }

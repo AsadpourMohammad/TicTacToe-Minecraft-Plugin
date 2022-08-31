@@ -9,9 +9,9 @@ import java.util.ArrayList;
 public class MyPlayer implements Serializable {
     public static ArrayList<MyPlayer> myOnlinePlayers = new ArrayList<>();
 
-    private Game game;
     private final Player player;
     private MyMaterial material;
+    private Game game;
     private boolean scoreboard = false;
 
     private int gamesWon = 0;
@@ -42,7 +42,7 @@ public class MyPlayer implements Serializable {
         this.material = material;
     }
 
-    public boolean isScoreboard() {
+    public boolean isScoreboardShown() {
         return scoreboard;
     }
 

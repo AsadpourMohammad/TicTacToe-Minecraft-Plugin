@@ -58,7 +58,7 @@ public class PutCommand implements CommandExecutor {
                 return true;
             }
         } else {
-            sender.sendMessage("Only a player can do the 'Tic-Tac-Toe put' action.");
+            sender.sendMessage("Only a player can call the 'Tic-Tac-Toe put' command.");
             return true;
         }
     }
@@ -73,7 +73,7 @@ public class PutCommand implements CommandExecutor {
             game.getMyPlayer2().anotherGameTied();
         } else {
             game.getTurn().getPlayer().sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "You have won the game!");
-            game.getMyPlayer2().getPlayer().sendTitle("YOU WON!","YAY!",2,70,2);
+            game.getTurn().getPlayer().sendTitle("YOU WON!","YAY!",2,70,2);
 
             for (int i = 0; i < 13; i++)
                 fireworks();
@@ -92,14 +92,14 @@ public class PutCommand implements CommandExecutor {
             }
         }
 
-        if (!game.getMyPlayer1().isScoreboard()) {
+        if (!game.getMyPlayer1().isScoreboardShown()) {
             game.getMyPlayer1().getPlayer().performCommand("scoreboard");
         } else {
             game.getMyPlayer1().getPlayer().performCommand("scoreboard");
             game.getMyPlayer1().getPlayer().performCommand("scoreboard");
         }
 
-        if (!game.getMyPlayer2().isScoreboard()) {
+        if (!game.getMyPlayer2().isScoreboardShown()) {
             game.getMyPlayer2().getPlayer().performCommand("scoreboard");
         } else {
             game.getMyPlayer2().getPlayer().performCommand("scoreboard");
