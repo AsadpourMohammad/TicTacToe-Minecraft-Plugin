@@ -31,10 +31,14 @@ public final class TicTacToePlugin extends JavaPlugin {
 
         //  Load doesn't work with accept and deny
 
-        //  Fix the animation
-        //  Check and see what happens when a player goes offline gets challenged,
-        //      and also check what happens if that player comes back, specially to the scoreboard,
-        //      If it stays the same or not
+        //  Players cannot access the commands if they go offline and return
+        //  Fix the scoreboard animation
+        //  Armor stand becomes visible for one of the players
         //  Break the game if players leave
+        //  Strangers entering the arena creates exception
+        //  Fireworks one at a time with timer
+        //  Stop giving away material at tie?
+        //      Or rather, make it in a way that only the winner can pick them up,
+        //      And at tie both of them are allowed. (Possible?)
     }
 }

@@ -47,8 +47,11 @@ public class PutCommand implements CommandExecutor {
                 if (game.put(Integer.parseInt(args[0]))) {
                     if (game.isOver())
                         announceEnd();
-                    else
-                        game.getTurn().get().sendMessage(Color_B + "Your turn to fill a spot.");
+                    else {
+                        String turnColor = game.getTurn().equals(game.getMyPlayer1()) ? Color_R : Color_B;
+
+                        game.getTurn().get().sendMessage(turnColor + "Your turn to fill a spot.");
+                    }
                 } else {
                     player.sendMessage(Color_R + "Please choose a different spot.");
                 }

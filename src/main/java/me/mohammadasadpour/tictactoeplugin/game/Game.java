@@ -16,8 +16,7 @@ import java.util.Objects;
 
 import static me.mohammadasadpour.tictactoeplugin.game.MyLocation.getLocList;
 import static me.mohammadasadpour.tictactoeplugin.game.MyPlayer.myOnlinePlayers;
-import static me.mohammadasadpour.tictactoeplugin.utils.RepeatingChatColors.Color_A;
-import static me.mohammadasadpour.tictactoeplugin.utils.RepeatingChatColors.Color_A_B;
+import static me.mohammadasadpour.tictactoeplugin.utils.RepeatingChatColors.*;
 
 public class Game implements Serializable {
     //  Static Collections ---------------------------------------------------------------------------------------------
@@ -210,8 +209,12 @@ public class Game implements Serializable {
         Player turnPlayer = turn.get();
         Player waitTurnPlayer = turnPlayer.equals(startingPlayer) ? teleportedPlayer : startingPlayer;
 
-        turnPlayer.sendMessage("It's your turn.");
-        waitTurnPlayer.sendMessage("Please wait for your turn.");
+        String turnColor = turn.equals(myPlayer1) ? Color_R : Color_B;
+
+        turnPlayer.sendMessage( turnColor +
+                "It's your turn.");
+        waitTurnPlayer.sendMessage( Color_A +
+                "Please wait for your turn.");
 
         games.put(gameName, this);
     }
@@ -321,11 +324,19 @@ public class Game implements Serializable {
     }
 
     public void destroyBoard() {
-        for (MyLocation location : blockBoard)
-            location.getLoc().getBlock().breakNaturally();
+        if (isOver()) {
+            for (MyLocation location : blockBoard)
+                location.getLoc().getBlock().breakNaturally();
 
-        for (MyLocation location : arena)
-            location.getLoc().getBlock().breakNaturally();
+            for (MyLocation location : arena)
+                location.getLoc().getBlock().breakNaturally();
+        } else {
+            for (MyLocation location : blockBoard)
+                location.getLoc().getBlock().setType(Material.AIR);
+
+            for (MyLocation location : arena)
+                location.getLoc().getBlock().setType(Material.AIR);
+        }
 
         allMyLocations.removeAll(arena);
         allMyLocations.removeAll(blockBoard);
