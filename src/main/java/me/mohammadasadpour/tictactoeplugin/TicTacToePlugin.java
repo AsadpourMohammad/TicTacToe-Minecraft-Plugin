@@ -17,5 +17,8 @@ public final class TicTacToePlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new OnGameBoardBreakListener(), this);
         //  30 Seconds wait for answer
         //  Database
+        //  First turn
+        //  Ground light
+        //  Glass roof
     }
 }

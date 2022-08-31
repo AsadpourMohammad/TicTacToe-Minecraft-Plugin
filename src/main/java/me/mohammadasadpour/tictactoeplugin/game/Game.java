@@ -4,11 +4,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 
 import java.io.Serializable;
 import java.util.*;
+
+import static org.bukkit.Bukkit.getServer;
 
 public class Game implements Serializable {
     public static HashMap<String, Game> games = new HashMap<>();
@@ -58,8 +61,14 @@ public class Game implements Serializable {
                         myPlayer1.getPlayer().getLocation().getBlockY() + 2,
                         myPlayer1.getPlayer().getLocation().getBlockZ() + z));
 
-        for (Location location : groundBlock)
-            location.getBlock().setType(Material.LIGHT_BLUE_GLAZED_TERRACOTTA);
+
+        if (day()) {
+            for (Location location : groundBlock)
+                location.getBlock().setType(Material.LIGHT_BLUE_GLAZED_TERRACOTTA);
+        } else {
+            for (Location location : groundBlock)
+                location.getBlock().setType(Material.JACK_O_LANTERN);
+        }
 
         blockBoard = new ArrayList<>();
         for (int y = 5; y > 2; y--)
@@ -71,6 +80,7 @@ public class Game implements Serializable {
 
         for (Location location : blockBoard)
             location.getBlock().setType(org.bukkit.Material.WHITE_WOOL);
+
 
         allLocations.addAll(groundBlock);
         allLocations.addAll(blockBoard);
@@ -173,7 +183,7 @@ public class Game implements Serializable {
     public String getWinner() {
         return winner;
     }
-    
+
     public void blockBoardHologram() {
         ArmorStand ticTacToeHologram = (ArmorStand) myPlayer1.getPlayer().getWorld().spawnEntity(blockBoard.get(2).getBlock().getLocation().add(-0.5, 0.3, 0), EntityType.ARMOR_STAND);
         ticTacToeHologram.setGravity(false);
@@ -197,6 +207,13 @@ public class Game implements Serializable {
         else
             winnerHologram.setCustomName(ChatColor.BOLD + "WINNER = " + winner.toUpperCase(Locale.ROOT));
         winnerHologram.setGravity(false);
+    }
+
+    public boolean day() {
+        Server server = getServer();
+        long time = server.getWorld(myPlayer1.getPlayer().getWorld().getName()).getTime();
+
+        return time > 0 && time < 12300;
     }
 
     @Override
