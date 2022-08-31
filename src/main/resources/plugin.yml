@@ -1,0 +1,20 @@
+name: TicTacToePlugin
+version: '${project.version}'
+main: me.mohammadasadpour.tictactoeplugin.TicTacToePlugin
+api-version: 1.18
+commands:
+  challenge:
+    description: To challenge another player to a game of Tic-Tac-Toe
+    usage: "usage: /challenge <anotherPlayerName>"
+  accept:
+    description: To accept another player's Tic-Tac-Toe challenge
+    usage: /<command>
+  deny:
+    description: To deny another player's Tic-Tac-Toe challenge
+    usage: /<command>
+  put:
+    description: To fill the n'th spot in the board
+    usage: "usage: /put <boardNumber>"
+  scoreboard:
+    description: To see the player's TicTacToe scoreboard
+    usage: /<command>
