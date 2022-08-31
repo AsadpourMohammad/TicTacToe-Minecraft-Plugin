@@ -31,6 +31,8 @@ public final class TicTacToePlugin extends JavaPlugin {
 
         //  Load doesn't work with accept and deny
 
+        //  'Abandon All Hope, Ye Who Enter Here'
+
         //  Players cannot access the commands if they go offline and return
         //  Fix the scoreboard animation
         //  Armor stand becomes visible for one of the players
@@ -40,5 +42,13 @@ public final class TicTacToePlugin extends JavaPlugin {
         //  Stop giving away material at tie?
         //      Or rather, make it in a way that only the winner can pick them up,
         //      And at tie both of them are allowed. (Possible?)
+        //  Add space to the end of scoreboard title to make it symmetrical with the body
+        //  Game Modes
+        //      One mode could be that monsters will attack the players while they are making their moves
+        //          (although, the game usually concludes in a short amount of time. So maybe they have to play
+        //          multiple rounds at the same time, without the game ending after each win or tie)
+        //      Tournament
+        //  backslash address
+        //  breaking the block with other things
     }
 }

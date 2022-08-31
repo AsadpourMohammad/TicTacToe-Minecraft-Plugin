@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class Game implements Serializable {
         this.turn = this.myPlayer1;
         this.beginGame(turn);
 
-        this.gameName = myPlayer1.get().getDisplayName() + myPlayer2.get().getDisplayName() + "." + hashCode();
+        this.gameName = myPlayer1.get().getDisplayName() + "." + myPlayer2.get().getDisplayName() + "." + hashCode();
     }
 
     public void beginGame(MyPlayer theStartingPlayer) {
@@ -199,11 +200,11 @@ public class Game implements Serializable {
 
         blockBoardHologram();
 
-        startingPlayer.teleport(startingPlayer.getLocation().add(1, 3, -1));
+        startingPlayer.teleport(arena.get(46).getLoc().add(0,0,+5).setDirection(new Vector(0,0,-180)));
         startingPlayer.sendMessage(Color_A +
                 startingPlayer.getDisplayName() + " has been teleported to your location. The game has begun");
 
-        teleportedPlayer.teleport(startingPlayer.getLocation().add(-2, 0, 0));
+        teleportedPlayer.teleport(arena.get(44).getLoc().add(0,0,+5).setDirection(new Vector(0,0,-180)));
         teleportedPlayer.sendMessage(Color_A + "You have been teleported to " + startingPlayer.getDisplayName() + "'s location.");
 
         Player turnPlayer = turn.get();
@@ -371,6 +372,6 @@ public class Game implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(myPlayer1, myPlayer2);
+        return Objects.hash(myPlayer1.get().getUniqueId(), myPlayer2.get().getUniqueId());
     }
 }
